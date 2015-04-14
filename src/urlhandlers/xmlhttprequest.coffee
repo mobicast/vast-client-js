@@ -18,6 +18,8 @@ class XHRURLHandler
             xhr.onreadystatechange = ->
                 if xhr.readyState == 4
                     cb(null, xhr.responseXML)
+
+            return xhr
         catch
             cb()
 

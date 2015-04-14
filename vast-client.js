@@ -307,6 +307,7 @@ var VASTAd;
 
 VASTAd = (function() {
   function VASTAd() {
+    this.id = null;
     this.errorURLTemplates = [];
     this.impressionURLTemplates = [];
     this.creatives = [];
@@ -782,6 +783,7 @@ VASTParser = (function() {
     _ref = adElement.childNodes;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       adTypeElement = _ref[_i];
+      adTypeElement.id = adElement.getAttribute("id");
       if (adTypeElement.nodeName === "Wrapper") {
         return this.parseWrapperElement(adTypeElement);
       } else if (adTypeElement.nodeName === "InLine") {
@@ -827,6 +829,7 @@ VASTParser = (function() {
   VASTParser.parseInLineElement = function(inLineElement) {
     var ad, creative, creativeElement, creativeTypeElement, node, _i, _j, _k, _len, _len1, _len2, _ref, _ref1, _ref2;
     ad = new VASTAd();
+    ad.id = inLineElement.id;
     _ref = inLineElement.childNodes;
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       node = _ref[_i];
@@ -1381,11 +1384,12 @@ XHRURLHandler = (function() {
       xhr.timeout = options.timeout || 0;
       xhr.withCredentials = options.withCredentials || false;
       xhr.send();
-      return xhr.onreadystatechange = function() {
+      xhr.onreadystatechange = function() {
         if (xhr.readyState === 4) {
           return cb(null, xhr.responseXML);
         }
       };
+      return xhr;
     } catch (_error) {
       return cb();
     }
