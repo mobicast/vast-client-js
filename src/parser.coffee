@@ -276,6 +276,10 @@ class VASTParser
                 
                 creative.mediaFiles.push mediaFile
 
+        adParametersElement = @childByName(creativeElement, "AdParameters")
+        if adParametersElement?
+            creative.adParameters = @parseNodeText(adParametersElement)
+
         return creative
 
     @parseCompanionAd: (creativeElement) ->
