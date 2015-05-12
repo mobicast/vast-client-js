@@ -39,8 +39,8 @@ class VASTClient
             cb(null)
             return
 
-        VASTParser.parse url, options, (response) =>
-            cb(response)
+        VASTParser.parse url, options, (response, parentURLs) =>
+            cb(response, parentURLs)
 
 
     # 'Fake' static constructor

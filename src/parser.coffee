@@ -24,8 +24,8 @@ class VASTParser
             cb = options if typeof options is 'function'
             options = {}
         
-        @_parse url, null, options, (err, response) ->
-            cb(response)
+        @_parse url, null, options, (err, response, parentURLs) ->
+            cb(response, parentURLs, err)
 
     @vent = new EventEmitter()
     @track: (templates, errorCode) ->
@@ -52,12 +52,12 @@ class VASTParser
 
         
         URLHandler.get url, options, (err, xml) =>
-            return cb(err) if err?
+            return cb(err, undefined, parentURLs) if err?
 
             response = new VASTResponse()
 
             unless xml?.documentElement? and xml.documentElement.nodeName is "VAST"
-                return cb()
+                return cb(undefined, undefined, parentURLs)
 
             for node in xml.documentElement.childNodes
                 if node.nodeName is 'Error'
@@ -83,7 +83,7 @@ class VASTParser
                     # If an [ERRORCODE] macro is included, the video player should substitute with error code 303.
                     @track(response.errorURLTemplates, ERRORCODE: 303) unless errorAlreadyRaised
                     response = null
-                cb(null, response)
+                cb(null, response, parentURLs)
 
             loopIndex = response.ads.length
             while loopIndex--

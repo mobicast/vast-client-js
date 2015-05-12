@@ -372,8 +372,8 @@ VASTClient = (function() {
       return;
     }
     return VASTParser.parse(url, options, (function(_this) {
-      return function(response) {
-        return cb(response);
+      return function(response, parentURLs) {
+        return cb(response, parentURLs);
       };
     })(this));
   };
@@ -582,8 +582,8 @@ VASTParser = (function() {
       }
       options = {};
     }
-    return this._parse(url, null, options, function(err, response) {
-      return cb(response);
+    return this._parse(url, null, options, function(err, response, parentURLs) {
+      return cb(response, parentURLs, err);
     });
   };
 
@@ -622,11 +622,11 @@ VASTParser = (function() {
       return function(err, xml) {
         var ad, complete, loopIndex, node, response, _j, _k, _len1, _len2, _ref, _ref1;
         if (err != null) {
-          return cb(err);
+          return cb(err, void 0, parentURLs);
         }
         response = new VASTResponse();
         if (!(((xml != null ? xml.documentElement : void 0) != null) && xml.documentElement.nodeName === "VAST")) {
-          return cb();
+          return cb(void 0, void 0, parentURLs);
         }
         _ref = xml.documentElement.childNodes;
         for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
@@ -672,7 +672,7 @@ VASTParser = (function() {
             }
             response = null;
           }
-          return cb(null, response);
+          return cb(null, response, parentURLs);
         };
         loopIndex = response.ads.length;
         while (loopIndex--) {
